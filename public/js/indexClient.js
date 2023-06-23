@@ -106,6 +106,7 @@ $(document).ready(function () {
         $('#insertForm')[0].reset();
         $('#insertForm').removeClass('was-validated');
         $('#insert_email').removeClass('is-invalid').css('border-color', "#dee2e6");
+        $('#insert_fullname').removeClass('is-invalid').css('border-color', "#dee2e6");
     })
 
     //Reset form khi đóng update form.
@@ -113,6 +114,7 @@ $(document).ready(function () {
         $('#updateForm')[0].reset();
         $('#updateForm').removeClass('was-validated');
         $('#update_email').removeClass('is-invalid').css('border-color', "#dee2e6");
+        $('#update_fullname').removeClass('is-invalid').css('border-color', "#dee2e6");
     })
 
     //Xử lý sự kiện khi nhấn vào button cập nhật ở dòng dữ liệu trên datatable

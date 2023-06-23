@@ -1,0 +1,12 @@
+body{
+    background-color: white;
+    font-family: Nunito,sans-serif;
+    line-height: 1.5;
+    color: #40464b;
+}
+a{
+    text-decoration: none;
+}
+.mark-note{
+    color:red;
+}

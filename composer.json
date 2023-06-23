@@ -1,0 +1,6 @@
+{
+    "name": "daoda/exercise",
+    "require": {
+        "phpmailer/phpmailer": "^6.8"
+    }
+}

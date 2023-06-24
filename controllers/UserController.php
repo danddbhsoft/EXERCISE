@@ -209,16 +209,17 @@ class UserController extends Controller
             if(isset($_SESSION['LoginWithAccount'])){
                 unset($_SESSION['LoginOK']);
                 $tokenModel = new TokenModel();
-                $tokenModel->update(['expired_at'], [(new DateTime())->format('Y-m-d H:i:s')], ['token'], [$_SESSION['token']], ['and']);
+                $token_ = $tokenModel->get(['user'], [$id], ['and'], "Order by created_at DESC", "LIMIT 1");
+                $tokenModel->update(['expired_at'], [(new DateTime())->format('Y-m-d H:i:s')], ['token'], [$token_[0]['token']], ['and']);
                 unset($_SESSION['LoginWithAccount']);
             }else{
                 $tokenModel = new TokenModel();
                 $token_ = $tokenModel->get(['user'], [$id], ['and'], "Order by created_at DESC", "LIMIT 1");
                 $url = 'https://accounts.google.com/o/oauth2/revoke?token=' . $token_[0]['token'];
-                $response = file_get_contents($url);
+                file_get_contents($url);
                 unset($_SESSION['LoginOK']);
                 unset($_SESSION['LoginWithGoogle']);
-                $tokenModel->update(['expired_at'], [(new DateTime())->format('Y-m-d H:i:s')], ['token'], [$_SESSION['token']], ['and']);
+                $tokenModel->update(['expired_at'], [(new DateTime())->format('Y-m-d H:i:s')], ['token'], [$token_[0]['token']], ['and']);
                 header('Location: index.php');
             }
         }

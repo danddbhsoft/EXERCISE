@@ -5,29 +5,31 @@ $(document).ready(function () {
         event.preventDefault();
         let form_datas = new FormData();
         var formId = event.target.id;
-            var function_ = '', error = '';
+        var function_ = '', error = '';
         if (formId === "insertForm") {
             function_ = 'insert';
         } else if (formId === "updateForm") {
             function_ = 'update';
             error = '-';
-            form_datas.append('id', $("#"+function_+"_id").val());
+            form_datas.append('id', $("#" + function_ + "_id").val());
         }
 
-        let fullname = $("#"+function_+"_fullname").val();
-        let email = $("#"+function_+"_email").val();
-        let address = $("#"+function_+"_address").val();
-        let gender = $("input[name="+function_+"_gender]:checked").val();
+        let fullname = $("#" + function_ + "_fullname").val();
+        let email = $("#" + function_ + "_email").val();
+        let address = $("#" + function_ + "_address").val();
+        let gender = $("input[name=" + function_ + "_gender]:checked").val();
+        
         var filter_email = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
         var filter_string = /^[a-zA-Z\s]+$/;
         let check = 0;
+
         form_datas.append('fullname', fullname);
         form_datas.append('email', email);
         form_datas.append('address', address);
         form_datas.append('gender', gender);
 
         var token = getToken();
-        
+
         if (email != "" && filter_email.test(email) && old_email != email) {
             $.ajax({
                 async: false,
@@ -45,59 +47,48 @@ $(document).ready(function () {
                     if (res == 1) {
                         check++;
                     } else {
-                        isInvalid(function_+"_email");
-                        $("#email"+error+"Error").text("Email đã tồn tại trong hệ thống rồi");
-                        changeInput(function_+"_email");
-                    }
-                    if (filter_string.test(fullname)) check++;
-                    else {
-                        isInvalid(function_+"_fullname");
-                        $('#fullname'+error+'Error').text("Họ và tên không được trống và chỉ được chứa ký tự chữ cái!");
-                        changeInput(function_+"_fullname");
-                    }
-                    if (address != "" && gender != "" && gender == 'female' || gender == 'male') {
-                        check++;
-                    }
-                    if (check == 3) {
-                        handleClient(function_, token, form_datas, insertUpdate);
-                        table.ajax.reload();
+                        isInvalid(function_ + "_email");
+                        $("#email" + error + "Error").text("Email đã tồn tại trong hệ thống rồi");
+                        changeInput(function_ + "_email");
                     }
                 }
             });
-        } else if(old_email == email){
-            if (filter_string.test(fullname)) check++;
-            else {
-                isInvalid(function_+"_fullname");
-                $('#fullname'+error+'Error').text("Họ và tên không được trống và chỉ được chứa ký tự chữ cái!");
-                changeInput(function_+"_fullname");
-            }
-            if (address != "" && gender != "" && gender == 'female' || gender == 'male') {
-                check++;
-            }
-            if (check == 2) {
-                handleClient(function_, token, form_datas, insertUpdate);
-                table.ajax.reload();
-            }
-        } else {
-            isInvalid(function_+"_email");
-            $('#email'+error+'Error').text("Email không được để trống và phải để đúng định dạng!");
-            changeInput(function_+"_email");
+        }else {
+            isInvalid(function_ + "_email");
+            $('#email' + error + 'Error').text("Email không được để trống và phải để đúng định dạng!");
+            changeInput(function_ + "_email");
+        }
+
+        if (filter_string.test(fullname)) check++;
+        else {
+            isInvalid(function_ + "_fullname");
+            $('#fullname' + error + 'Error').text("Họ và tên không được trống và chỉ được chứa ký tự chữ cái!");
+            changeInput(function_ + "_fullname");
+        }
+
+        if (address != "" && gender != "" && gender == 'female' || gender == 'male') {
+            check++;
+        }
+
+        if (check == 3 || old_email == email && function_ == "update" && check==2) {
+            handleClient(function_, token, form_datas, insertUpdate);
+            table.ajax.reload();
         }
     })
 
     //Hiển thị thông báo thêm hoặc cập nhật dữ liệu thành công và cập nhật bảng dữ liệu.
-    function insertUpdate(res, method){
+    function insertUpdate(res, method) {
         if (res) {
-            if(method == 'insert')   toastShow("Thêm thành công!", 'Thêm khách hàng vào hệ thống thành công!');
-            else    toastShow("Sửa thành công!", 'Sửa thông tin cho khách hàng thành công!');
+            if (method == 'insert') toastShow("Thêm thành công!", 'Thêm khách hàng vào hệ thống thành công!');
+            else toastShow("Sửa thành công!", 'Sửa thông tin cho khách hàng thành công!');
             var currentPage = table.page.info().page;
-            table.ajax.reload(function(){
+            table.ajax.reload(function () {
                 table.page(currentPage).draw(false);
             }, false);
-            $(".close"+method.charAt(0).toUpperCase()+method.slice(1)+"Client").click();
+            $(".close" + method.charAt(0).toUpperCase() + method.slice(1) + "Client").click();
         } else {
-            if(method == 'insert')   toastShow("Thêm không thành công!", 'Thêm khách hàng vào hệ thống không thành công!');
-            else    toastShow("Sửa không thành công!", 'Sửa thông tin cho khách hàng không thành công!');
+            if (method == 'insert') toastShow("Thêm không thành công!", 'Thêm khách hàng vào hệ thống không thành công!');
+            else toastShow("Sửa không thành công!", 'Sửa thông tin cho khách hàng không thành công!');
         }
     }
 
@@ -118,20 +109,20 @@ $(document).ready(function () {
     })
 
     //Xử lý sự kiện khi nhấn vào button cập nhật ở dòng dữ liệu trên datatable
-    $('#myTable').on('click', '.btn-update', function() {
+    $('#myTable').on('click', '.btn-update', function () {
         var row = $(this).closest('tr');
         var rowData = table.row(row).data();
-        var arr = {0: 'id', 1:'fullname', 2:'email', 3:'address', 4:'gender'}
+        var arr = { 0: 'id', 1: 'fullname', 2: 'email', 3: 'address', 4: 'gender' }
         var ind = 0;
-        $('#updateForm input').each(function() {
-            if(arr[ind] != 'gender'){
+        $('#updateForm input').each(function () {
+            if (arr[ind] != 'gender') {
                 $(this).val(rowData[arr[ind]]);
                 ind++;
             }
         })
-        if(rowData['gender'] == 1){
+        if (rowData['gender'] == 1) {
             $("#update_male").prop("checked", true);
-        }else{
+        } else {
             $("#update_female").prop("checked", true);
         }
         old_email = rowData['email'];
@@ -151,11 +142,11 @@ function confirmDelete(event) {
     }
 }
 
-function delete_(res, method){
+function delete_(res, method) {
     if (res) {
         toastShow("Xóa thành công!", 'Xóa khách hàng khỏi hệ thống thành công!');
         var currentPage = table.page.info().page;
-        table.ajax.reload(function(){
+        table.ajax.reload(function () {
             table.page(currentPage).draw(false);
         }, false);
     } else {

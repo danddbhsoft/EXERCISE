@@ -131,7 +131,7 @@ $(document).ready(function () {
 
 //Xác thực hành động xóa khách hàng và dùng ajax xử lý nó
 function confirmDelete(event) {
-    if (confirm("Bạn có chắc chắn muốn xóa câu hỏi này?")) {
+    if (confirm("Bạn có chắc chắn muốn xóa khách hàng này?")) {
         var id = event.target.closest('button').value;
         let form_datas = new FormData();
         form_datas.append('id', id);
